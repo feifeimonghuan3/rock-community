@@ -1,0 +1,10 @@
+.Home .pickDay{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.Home .pickDay-day{
+    font-size: 18px;
+    line-height: 32px;
+}
