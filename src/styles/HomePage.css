@@ -1,0 +1,10 @@
+.HomePage{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.HomePage-main {
+    flex: 1;
+    overflow: scroll;
+}

@@ -59,20 +59,21 @@ class App extends Component {
   render() {
         console.log(this);
     return (
-        <Router>
-            <MuiThemeProvider>
+        <MuiThemeProvider>
+            <Router>
                 <div className="App">
                     <div className="App-main">
                         <Switch>
                             <Route path="/Login" component={Login}/>
-                            <Route exact path="/" component={Home}/>
-                            <Route path="/My" component={My}/>
+                            <Route path="/" component={HomePage}/>
+                            {/*<Route path="/My" component={My}/>*/}
                         </Switch>
                     </div>
-                    {this._tabBar()}
+                    {/*{this._tabBar()}*/}
                 </div>
-            </MuiThemeProvider>
-        </Router>
+            </Router>
+        </MuiThemeProvider>
+
     );
   }
 }
