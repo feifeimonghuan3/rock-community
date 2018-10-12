@@ -24,7 +24,7 @@ const DayList = (state = initialState, action) => {
         case 'SET_DAYLIST':
             return action.data;
         default:
-            return []
+            return null
     }
 }
 
@@ -33,7 +33,7 @@ const HomeMSG = (state = initialState, action) => {
         case 'SET_HOME_MSG':
             return action.data;
         default:
-            return []
+            return null
     }
 }
 

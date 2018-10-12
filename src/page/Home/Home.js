@@ -90,50 +90,71 @@ class Home extends Component {
     _submit = () => {
         const dayList = Store.getState().getIn(['dayList']);
         const homeMSG = Store.getState().getIn(['homeMSG']);
-        if (dayList.length === 0) {
-            this.setState({msg: '请选择时间'});
+        console.log(dayList);
+        if(dayList === null) {
+            this.setState({msg: '请选择时间1'});
             this.handleClick();
             return false;
         }
-        // if (this.state.msgText === null) {
-        //     this.setState({msg: '请填写备注'});
-        //     this.handleClick();
-        //     return false;
-        // }
-        if (this.props.userName) {
-            const _this = this;
-            // const { dayList } = this.state;
-            for (let i in dayList) {
-                dayList[i] = dayList[i] + 9;
-            }
-            console.log(this.state.msgText);
-            axios.post(api.api + 'addCommunity', {
-                communityUserID: this.props.uuid,
-                communityUseYear: this.state.year,
-                communityUseMonth: this.state.month,
-                communityUseDay: this.state.day,
-                communityUseHour: dayList,
-                note: '排练',
-            }).then(function (response) {
-                console.log(response);
-                if ( response.data.code === 201) {
-                    _this.setState({
-                        msg: '预约成功',
-                    });
-                    this.props.setHomeMSG(null);
-                    this.props.setDayList(null);
-                    _this.handleClick();
-                    this._getCommunity();
-                } else {
-                    _this.setState({msg: response.data.msg});
-                    _this.handleClick();
-                }
-            }).catch(function (error) {
-                console.log(error);
-            });
-        } else {
-            this.props.history.push('/Login');
+        if (dayList.length === 0) {
+            this.setState({msg: '请选择时间2'});
+            this.handleClick();
+            return false;
         }
+        if (!this.props.userName) {
+            this.props.setDayList(null);
+            this.props.history.push('/Login');
+            return
+        }
+        // // if (this.state.msgText === null) {
+        // //     this.setState({msg: '请填写备注'});
+        // //     this.handleClick();
+        // //     return false;
+        // // }
+        // if (this.props.userName) {
+        //     const _this = this;
+        //     // const { dayList } = this.state;
+        //     for (let i in dayList) {
+        //         dayList[i] = dayList[i] + 9;
+        //     }
+        //     console.log(this.state.msgText);
+        //     axios.post(api.api + 'addCommunity', {
+        //         communityUserID: this.props.uuid,
+        //         communityUseYear: this.state.year,
+        //         communityUseMonth: this.state.month,
+        //         communityUseDay: this.state.day,
+        //         communityUseHour: dayList,
+        //         note: '排练',
+        //     }).then(function (response) {
+        //         console.log(response);
+        //         if ( response.data.code === 201) {
+        //             _this.setState({
+        //                 msg: '预约成功',
+        //             });
+        //             this.props.setHomeMSG(null);
+        //             this.props.setDayList(null);
+        //             _this.handleClick();
+        //             this._getCommunity();
+        //         } else {
+        //             _this.setState({msg: response.data.msg});
+        //             _this.handleClick();
+        //         }
+        //     }).catch(function (error) {
+        //         console.log(error);
+        //     });
+        // } else {
+        //     this.props.history.push('/Login');
+        // }
+        // this.props.history.push('/MessagePage');
+        this.props.history.push({
+            pathname:"/MessagePage",
+            query:{
+                dayList: dayList,
+                is: '我在这',
+                stringDate: this.state.stringDate,
+            }
+        })
+
     }
 
     _getCommunity = () => {
@@ -237,20 +258,31 @@ class Home extends Component {
                     </FlatButton></div>
                 </div>
                 <Table multiSelectable={true} onRowSelection={(rowNumber) => {
-                    if (rowNumber.length === 0 ) {
-                        return
-                    }
+                    console.log(rowNumber);
                     let dayList = [];
-                    if (rowNumber == 'all') {
-                        for (let i in this.state.timeArr){
-                            dayList.push(parseInt(i));
-                        }
-                    } else if(rowNumber === 'none') {
-                        dayList = [];
-                    } else {
-                        dayList = rowNumber;
+                    // if (rowNumber == 'all') {
+                    //     for (let i in this.state.timeArr){
+                    //         dayList.push(parseInt(i));
+                    //     }
+                    // } else if(rowNumber === 'none') {
+                    //     dayList = [];
+                    // } else {
+                    //     dayList = rowNumber;
+                    // }
+                    // const dayListStore = Store.getState().getIn(['dayList']);
+                    // if (!(rowNumber.length === 0 && dayListStore.length !== 0)) {
+                    //
+                    //     dayList = rowNumber;
+                    //     // return
+                    // } else if(rowNumber.length === 0 && dayListStore === null){
+                    //     return;
+                    // } else {
+                    //     dayList = null
+                    // }
+                    if(rowNumber.length === 0) {
+                        return ;
                     }
-                    this.props.setDayList(dayList);
+                    this.props.setDayList(rowNumber);
                 }}
                     //    onCellClick={(rowNumber) => {
                     // const {timeArr} = this.state;
@@ -265,7 +297,7 @@ class Home extends Component {
                     // })
                 // }}
                 >
-                    <TableHeader>
+                    <TableHeader displaySelectAll={false}>
                         <TableRow>
                             <TableHeaderColumn>时间</TableHeaderColumn>
                             <TableHeaderColumn>状态</TableHeaderColumn>
@@ -300,15 +332,15 @@ class Home extends Component {
                     </TableBody>
                 </Table>
                 <div class="msgInput">
-                    <TextField
-                        hintText="备注"
-                        fullWidth={true}
-                        onChange={(event, newValue) => {
-                            this.props.setHomeMSG(newValue);
-                        }}
-                    />
+                    {/*<TextField*/}
+                        {/*hintText="备注"*/}
+                        {/*fullWidth={true}*/}
+                        {/*onChange={(event, newValue) => {*/}
+                            {/*this.props.setHomeMSG(newValue);*/}
+                        {/*}}*/}
+                    {/*/>*/}
+                    <FlatButton label={'确定'} fullWidth={true} backgroundColor={'rgb(0, 188, 212)'} rippleColor={'#FFF'} style={{marginTop: 20,marginBottom: 20,color: '#FFF'}} onClick={this._submit}/>
                 </div>
-                <FlatButton label={'确定'} onClick={this._submit}/>
                 <Snackbar
                     open={this.state.barState}
                     message={this.state.msg}

@@ -8,6 +8,7 @@ import My from './page/My';
 import HomePage from './page/HomePage';
 import Login from './page/Login';
 import Home from "./page/Home";
+import Message from "./page/Message";
 
 
 class App extends Component {
@@ -65,6 +66,7 @@ class App extends Component {
                     <div className="App-main">
                         <Switch>
                             <Route path="/Login" component={Login}/>
+                            <Route exact path="/MessagePage" component={Message}/>
                             <Route path="/" component={HomePage}/>
                             {/*<Route path="/My" component={My}/>*/}
                         </Switch>
